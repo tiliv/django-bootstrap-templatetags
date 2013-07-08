@@ -3,7 +3,7 @@ django-bootstrap-templatetags
 
 Utility templatetag library for minimizing Bootstrap scaffolding for verbose structures.
 
-Add ``bootstrap_templatetags`` to your installed apps and then load up the library from a template!
+Add ``bootstrap_templatetags`` to your installed apps and then load up the ``bootstrap_tags`` library.
 
 **Be warned** that these tags do not exist in order to get wildly fancy and create some frankendjango.  These are provided to simplify some of the heavier Bootstrap scaffolding.  In most cases, care has been taken to not modify anything about how you would normally write your template; you simply replace the scaffolding with these tags and sub-tags.
 
