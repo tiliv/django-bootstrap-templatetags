@@ -18,5 +18,5 @@ setup(name='django-bootstrap-templatetags',
            'Topic :: Software Development',
            'License :: OSI Approved :: Apache Software License',
       ],
-      requires=['django (>=1.2)', 'django-easytags (>=1.0)'],
+      requires=['django (>=1.2)', 'django-easytags>=1.0'],
 )
