@@ -7,6 +7,7 @@ setup(name='django-bootstrap-templatetags',
       description='Vanilla Bootstrap structures in simple rendering blocks.',
       author='Tim Valenta',
       author_email='tim.valenta@thesimpler.net',
+      packages = find_packages(),
       url='https://github.com/tiliv/django-bootstrap-templatetags',
       license='Apache License 2.0',
       classifiers=[
