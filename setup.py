@@ -19,5 +19,6 @@ setup(name='django-bootstrap-templatetags',
            'License :: OSI Approved :: Apache Software License',
       ],
       requires=['django (>=1.2)'],
+      py_modules=['bootstrap_templatetags'],
       dependency_links=['git+https://github.com/tiliv/django-easytag'],
 )
