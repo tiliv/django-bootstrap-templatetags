@@ -19,7 +19,7 @@ If you need any more flexibility than what is being provided by the default, van
 * ``id`` (required): The DOM id for the accordion.
 * ``active_panel``: A 1-based index denoting the default expanded panel.
 
-NOTE: Content should generally not be placed immediately after opening the tag.  Instead, move on to create the first ``{% group %}`` section.
+**NOTE**: Content should generally not be placed immediately after opening the tag.  Instead, move on to create the first ``{% group %}`` section.
 
 Sub-tags allowed to appear within ``bootstrap_accordion``:
 
