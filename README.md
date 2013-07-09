@@ -9,6 +9,8 @@ Add ``bootstrap_templatetags`` to your installed apps and then load up the ``boo
 
 If you need any more flexibility than what is being provided by the default, vanilla Bootstrap structures, you should actually write some Bootstrap markup and move on with your life :)
 
+**NOTE**: Please be aware of which version of Django you are using.  In Django 1.5, it was added that you can use the ``True``, ``False``, and ``None`` literals as values, which is how the examples below are written.  If you are using Django 1.4 or earlier, you will find that passing a literal ``True`` yeilds a blank string as if a variable resolution failed.  Plan accordingly!
+
 ## Available tags
 
 ### Accordion
