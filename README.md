@@ -17,7 +17,7 @@ If you need any more flexibility than what is being provided by the default, van
 **Tag: ``{% bootstrap_accordion "id" active_panel=1 %}``**
 
 * ``id`` (required): The DOM id for the accordion.
-* ``active_panel``: A 1-based index denoting the default expanded panel
+* ``active_panel``: A 1-based index denoting the default expanded panel.
 
 NOTE: Content should generally not be placed immediately after opening the tag.  Instead, move on to create the first ``{% group %}`` section.
 
