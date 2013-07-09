@@ -110,30 +110,40 @@ class BootstrapNavTabs(EasyTag):
 
         return nodelist.render(context)
 
-    def tab(self, context, nodelist, label, enabled=True):
-        context.render_context[self]['counter'] += 1
-        i = context.render_context[self]['counter']
+    def tab(self, context, nodelist, label, show=True, active=False):
+        if show:
+            context.render_context[self]['counter'] += 1
+            i = context.render_context[self]['counter']
+        else:
+            i = -1
 
         id = slugify(label)
-        active = 'active' if self._is_active(i, context) else ''
+        if active or self._is_active(i, context):
+            active = 'active'
+        else:
+            active = ''
 
         # Store away certain data for rendering the panel
         context.render_context[self]['tabs'].append({
             'tab_id': id,
             'active': active,
+            'show': show,
 
             # Render the panel innards, but don't return the string data yet
             'content': nodelist.render(context),
         })
 
         # Render the tab part
-        return self.NAV_TAB.format(label=label, active=active, tab_id=id)
+        if show:
+            return self.NAV_TAB.format(label=label, active=active, tab_id=id)
+        return ""
 
     def render_content_panels(self, context):
         """ Custom end handler to append output outside of the tabs wrapper. """
         content_panels = []
         for tab in context.render_context[self]['tabs']:
-            content_panels.append(self.NAV_PANEL.format(**tab))
+            if tab['show']:
+                content_panels.append(self.NAV_PANEL.format(**tab))
         return u"".join(content_panels)
 
     def _is_active(self, i, context):
