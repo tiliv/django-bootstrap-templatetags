@@ -50,7 +50,7 @@ class BootstrapAccordion(EasyTag):
             context.render_context[self] = {'counter': 0}
 
         self.id = id
-        self.active_panel = active_panel
+        self.active_index = active_panel
         return nodelist.render(context)
 
     def group(self, context, nodelist, heading):
@@ -68,6 +68,6 @@ class BootstrapAccordion(EasyTag):
         return group_html.format(id=self.id, i=i, active=active, heading=heading, body=content)
 
     def _is_active(self, i, context):
-        return context.render_context[self]['counter'] == self.active_panel
+        return context.render_context[self]['counter'] == self.active_index
 
 register.tag(BootstrapAccordion.name, BootstrapAccordion.parser)
