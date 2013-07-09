@@ -1,6 +1,7 @@
 from easytag import EasyTag
 
 from django import template
+from django.template.defaultfilters import slugify
 
 register = template.Library()
 
@@ -71,3 +72,72 @@ class BootstrapAccordion(EasyTag):
         return context.render_context[self]['counter'] == self.active_index
 
 register.tag(BootstrapAccordion.name, BootstrapAccordion.parser)
+
+class BootstrapNavTabs(EasyTag):
+    name = 'bootstrap_navtabs'
+    intermediate_tags = ['tab']
+    end_tag = True
+
+    NAV_TABS_WRAPPER = u"""
+    <ul class="nav nav-tabs">{content}</ul>
+    """
+    NAV_TAB = u"""
+    <li class="{active}"><a data-toggle="tab" href="#{tab_id}">{label}</a></li>
+    """
+    NAV_PANELS_WRAPPER = u"""
+    <div class="tab-content">{content}</div>
+    """
+    NAV_PANEL = u"""
+    <div class="tab-pane {active}" id="{tab_id}">{content}</div>
+    """
+
+    def render(self, context):
+        """ Wraps the entire output with the ul.nav.nav-tabs container. """
+        content = super(BootstrapNavTabs, self).render(context)
+        tabs = self.NAV_TABS_WRAPPER.format(content=content)
+        panels = self.NAV_PANELS_WRAPPER.format(content=self.render_content_panels(context))
+        return u"".join((tabs, panels))
+
+    def bootstrap_navtabs(self, context, nodelist, active_tab=1):
+        """ Usually empty opening node handler. """
+        if self not in context.render_context:
+            context.render_context[self] = {
+                'tabs': [],
+                'counter': 0,
+            }
+
+        self.active_index = active_tab
+
+        return nodelist.render(context)
+
+    def tab(self, context, nodelist, label, enabled=True):
+        context.render_context[self]['counter'] += 1
+        i = context.render_context[self]['counter']
+
+        id = slugify(label)
+        active = 'active' if self._is_active(i, context) else ''
+
+        # Store away certain data for rendering the panel
+        context.render_context[self]['tabs'].append({
+            'tab_id': id,
+            'active': active,
+
+            # Render the panel innards, but don't return the string data yet
+            'content': nodelist.render(context),
+        })
+
+        # Render the tab part
+        return self.NAV_TAB.format(label=label, active=active, tab_id=id)
+
+    def render_content_panels(self, context):
+        """ Custom end handler to append output outside of the tabs wrapper. """
+        content_panels = []
+        for tab in context.render_context[self]['tabs']:
+            content_panels.append(self.NAV_PANEL.format(**tab))
+        return u"".join(content_panels)
+
+    def _is_active(self, i, context):
+        return context.render_context[self]['counter'] == self.active_index
+
+
+register.tag(BootstrapNavTabs.name, BootstrapNavTabs.parser)
