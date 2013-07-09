@@ -38,3 +38,29 @@ Example:
 {% endbootstrap_accordion %}
 ```
 
+### Nav-tabs
+**Tag: ``{% bootstrap_navtabs active_tab=1 %}``**
+
+* ``active_panel``: A 1-based index denoting the default active tab.
+
+Sub-tags allowed to appear within ``bootstrap_navtabs``:
+
+* ``{% tag "label" show=True active=None %}``
+    * ``label`` (required): The markup that should appear inside of the tab's ``<a>`` tag.
+    * ``show``: A boolean switch to decide if the tab and its content panel should even be rendered.
+    * ``active``: If ``True``-ish, explicitly gives or withholds the "active" class on the associated tab and panel.  If you end up setting multiple tabs as active, that's on you, wanderer.
+
+There's not really a proper way to allow you to omit the ``bootstrap_navtabs.active_tab`` setting in favor of using a ``tag.active`` flag.  If you wish to use ``tab.active``, please set the main ``bootstrap_navtabs.active_panel`` to 0, None, or some other non-True value.
+
+Example:
+
+```html
+{% bootstrap_navtabs active_tab=3 %}
+    {% tab label="First" %}
+        First panel content
+    {% tab label="Second" show=False %}
+        Completely unrendered content, due to the "show" flag being False.
+    {% tab label="Third" %}
+        Third panel content
+{% endbootstrap_navtabs %}
+```
