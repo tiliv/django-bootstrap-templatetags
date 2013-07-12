@@ -45,12 +45,12 @@ Example:
 
 Sub-tags allowed to appear within ``bootstrap_navtabs``:
 
-* ``{% tag "label" show=True active=None %}``
+* ``{% tab "label" show=True active=None %}``
     * ``label`` (required): The markup that should appear inside of the tab's ``<a>`` tag.
     * ``show``: A boolean switch to decide if the tab and its content panel should even be rendered.
     * ``active``: If ``True``-ish, explicitly gives or withholds the "active" class on the associated tab and panel.  If you end up setting multiple tabs as active, that's on you, wanderer.
 
-There's not really a proper way to allow you to omit the ``bootstrap_navtabs.active_tab`` setting in favor of using a ``tag.active`` flag.  If you wish to use ``tab.active``, please set the main ``bootstrap_navtabs.active_panel`` to 0, None, or some other non-True value.
+There's not really a proper way to allow you to omit the ``bootstrap_navtabs.active_tab`` setting in favor of using a ``tab.active`` flag.  If you wish to use ``tab.active``, please set the main ``bootstrap_navtabs.active_panel`` to 0, None, or some other non-True value.
 
 Example:
 
