@@ -116,7 +116,12 @@ class BootstrapNavTabs(EasyTag):
 
         id = slugify(label)
         if active or self._is_active(i, context):
-            active = 'active'
+            if show:
+                active = 'active'
+            else:
+                # If the active index is actually not showing, push it down by one
+                active = ''
+                self.active_index += 1
         else:
             active = ''
 
