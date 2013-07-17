@@ -129,7 +129,7 @@ class BootstrapNavTabs(EasyTag):
 
         if show:
             # Render the panel innards, but don't return the string data yet
-            context.render[self]['tabs'][-1]['content'] = nodelist.render(context)
+            context.render_context[self]['tabs'][-1]['content'] = nodelist.render(context)
 
             # Render the tab part
             return self.NAV_TAB.format(label=label, active=active, tab_id=id)
