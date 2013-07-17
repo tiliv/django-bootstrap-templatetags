@@ -111,11 +111,8 @@ class BootstrapNavTabs(EasyTag):
         return nodelist.render(context)
 
     def tab(self, context, nodelist, label, show=True, active=False):
-        if show:
-            context.render_context[self]['counter'] += 1
-            i = context.render_context[self]['counter']
-        else:
-            i = -1
+        context.render_context[self]['counter'] += 1
+        i = context.render_context[self]['counter']
 
         id = slugify(label)
         if active or self._is_active(i, context):
