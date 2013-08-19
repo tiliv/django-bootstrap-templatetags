@@ -2,101 +2,146 @@ from easytag import EasyTag
 
 from django import template
 from django.template.defaultfilters import slugify
+from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
+from django.conf import settings
 
 register = template.Library()
 
-class BootstrapAccordion(EasyTag):
+if not hasattr(settings, 'BOOTSTRAP_TEMPLATETAGS_STYLE'):
+    raise AttributeError("settings.BOOTSTRAP_TEMPLATETAGS_STYLE is unset; please use 'bootstrap2' or 'bootstrap3'.")
+
+def stop_unsupported_use(tag, style, required_values):
+    """
+    Raises a ValueError if settings.BOOTSTRAP_TEMPLATETAGS_STYLE is set inappropriately for the use
+    of values in the ``required_values`` list, which is a list of 2-tuples of user-defined values
+    paired to the required untampered value.
+    """
+    if settings.BOOTSTRAP_TEMPLATETAGS_STYLE == style:
+        for arg, default_value in required_values:
+            if arg != default_value:
+                raise ValueError("%s's '%s' option not available for %s" % (tag.name, arg, style))
+
+
+class BaseBootstrapTag(EasyTag):
+    """ Provides simplified template fragment rendering. Should not be directly registered. """
+    templates = {}
+
+    def render_template(self, name, version=settings.BOOTSTRAP_TEMPLATETAGS_STYLE, **context):
+        """
+        Looks up ``name`` as a key to the tag's ``templates`` dictionary attribute and returns the
+        rendered string content.
+        """
+        name = self.templates[name]
+        content = render_to_string("{version}/{name}".format(version=version, name=name), context)
+        return mark_safe(content)
+
+
+class BootstrapAccordion(BaseBootstrapTag):
     name = 'bootstrap_accordion'
-    intermediate_tags = ['group']
+    intermediate_tags = ['group', 'panel']
     end_tag = True
 
-    ACCORDION_WRAPPER = u"""
-    <div class="accordion" id="{id}">{content}</div>
-    """
-    ACCORDION_HEADING = u"""
-    <div class="accordion-heading">
-        <a data-parent="#{id}" href="#{id}-panel-{i}" class="accordion-toggle" data-toggle="collapse">
-            {heading}
-        </a>
-    </div>
-    """
-    ACCORDION_BODY = u"""
-    <div id="{id}-panel-{i}" class="accordion-body collapse {active}">
-        <div class="accordion-inner">
-            {body}
-        </div>
-    </div>
-    """
-    ACCORDION_GROUP = u"""
-    <div class="accordion-group">
-        {HEADING}
-        {BODY}
-    </div>
-    """
+    templates = {
+        'wrapper': "accordion/wrapper.html",
+        'heading': "accordion/heading.html",
+        'body': "accordion/body.html",
+        'panel': "accordion/panel.html",
+    }
 
     def render(self, context):
         """ Wraps the entire output with the accordion div. """
         content = super(BootstrapAccordion, self).render(context)
-        return self.ACCORDION_WRAPPER.format(id=self.id, content=content)
+        return self.render_template('wrapper', id=self.id, content=mark_safe(content))
 
-    def bootstrap_accordion(self, context, nodelist, id, active_panel=1):
+    def bootstrap_accordion(self, context, nodelist, id, active_panel=1, style='default',
+                            use_title=False):
         """
         Main handler, typically empty, but specifies the HTML id.
 
         If provided, ``active_panel`` is a 1-based index to override which panel is expanded by
         default.
+
+        For Bootstrap 3, ``style`` controls the class type that will be applied to all panels in the
+        group (unless a panel declares its own ``style`` argument).  This option is unavailable for
+        Bootstrap 2, since legacy accordions did not support this 'type' paradigm.
+        
+        For Bootstrap 3, ``use_title`` is optionally a string between 'h1' and 'h6' to describe the
+        desire for an HTML title heading around the clickable panel text.  This produces, for
+        example, <h1 class="panel-title> <a ...></a> </h1>" instead of just a link.
         """
+
+        stop_unsupported_use(self, 'bootstrap2', [
+            (style, 'default'),
+            (use_title, False),
+        ])
 
         if self not in context.render_context:
             context.render_context[self] = {'counter': 0}
 
         self.id = id
         self.active_index = active_panel
+        self.global_style = style
+        self.use_title = use_title
         return nodelist.render(context)
 
-    def group(self, context, nodelist, heading):
+    def group(self, context, nodelist, heading, style='default'):
+        import warnings
+        warnings.warn("The bootstrap_accordion's {% group %} tag is deprecated; use {% panel %}"
+                      " instead", DeprecationWarning)
+        return self.panel(context, nodelist, heading, style=style)
+
+    def panel(self, context, nodelist, heading, style=None):
         """
         Renders a simple header text and treats the following template content as the panel's body
         content.
         """
 
+        stop_unsupported_use(self, 'bootstrap2', [(style, None)])
+
         content = nodelist.render(context)
         context.render_context[self]['counter'] += 1
         i = context.render_context[self]['counter']
         active = 'in' if self._is_active(i, context) else ''
-        group_html = self.ACCORDION_GROUP.format(HEADING=self.ACCORDION_HEADING,
-                                                 BODY=self.ACCORDION_BODY)
-        return group_html.format(id=self.id, i=i, active=active, heading=heading, body=content)
+        data = {
+            'id': self.id,
+            'i': i,
+            'active': active,
+            'heading': heading,
+            'body': content,
+            'use_title': self.use_title,
+        }
+        panel_heading = self.render_template('heading', **data)
+        panel_body = self.render_template('body', **data)
+        return self.render_template('panel', panel_heading=panel_heading, panel_body=panel_body,
+                                    style=(style or self.global_style), **data)
 
     def _is_active(self, i, context):
         return context.render_context[self]['counter'] == self.active_index
 
 register.tag(BootstrapAccordion.name, BootstrapAccordion.parser)
 
-class BootstrapNavTabs(EasyTag):
+class BootstrapNavTabs(BaseBootstrapTag):
     name = 'bootstrap_navtabs'
     intermediate_tags = ['tab']
     end_tag = True
 
-    NAV_TABS_WRAPPER = u"""
-    <ul class="nav nav-tabs">{content}</ul>
-    """
-    NAV_TAB = u"""
-    <li class="{active}"><a data-toggle="tab" href="#{tab_id}">{label}</a></li>
-    """
-    NAV_PANELS_WRAPPER = u"""
-    <div class="tab-content">{content}</div>
-    """
-    NAV_PANEL = u"""
-    <div class="tab-pane {active}" id="{tab_id}">{content}</div>
-    """
+    templates = {
+        'wrapper': "navtabs/wrapper.html",
+        'tab': "navtabs/tab.html",
+        'panels_wrapper': "navtabs/panels_wrapper.html",
+        'panel': "navtabs/panel.html",
+    }
 
     def render(self, context):
         """ Wraps the entire output with the ul.nav.nav-tabs container. """
         content = super(BootstrapNavTabs, self).render(context)
-        tabs = self.NAV_TABS_WRAPPER.format(content=content)
-        panels = self.NAV_PANELS_WRAPPER.format(content=self.render_content_panels(context))
-        return u"".join((tabs, panels))
+
+        # Mark rendered pieces as safe!
+        tabs = self.render_template('wrapper', content=mark_safe(content))
+        panels = self.render_template('panels_wrapper',
+                                      content=mark_safe(self.render_content_panels(context)))
+        return u"".join([tabs, panels])
 
     def bootstrap_navtabs(self, context, nodelist, active_tab=1):
         """ Usually empty opening node handler. """
@@ -137,7 +182,7 @@ class BootstrapNavTabs(EasyTag):
             context.render_context[self]['tabs'][-1]['content'] = nodelist.render(context)
 
             # Render the tab part
-            return self.NAV_TAB.format(label=label, active=active, tab_id=id)
+            return self.render_template('tab', label=label, active=active, tab_id=id)
         return ""
 
     def render_content_panels(self, context):
@@ -145,7 +190,7 @@ class BootstrapNavTabs(EasyTag):
         content_panels = []
         for tab in context.render_context[self]['tabs']:
             if tab['show']:
-                content_panels.append(self.NAV_PANEL.format(**tab))
+                content_panels.append(self.render_template('panel', **tab))
         return u"".join(content_panels)
 
     def _is_active(self, i, context):

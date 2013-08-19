@@ -1,0 +1,7 @@
+<div class="panel-heading">
+    {% if use_title %}<{{ use_title }} class="heading-title">{% endif %}
+        <a href="#{{ id }}-panel-{{ i }}" data-toggle="collapse" data-parent="#{{ id }}" class="accordion-toggle">
+            {{ heading }}
+        </a>
+    {% if use_title %}</{{ use_title }}>{% endif %}
+</div>
