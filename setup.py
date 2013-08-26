@@ -8,6 +8,8 @@ setup(name='django-bootstrap-templatetags',
       author='Tim Valenta',
       author_email='tim.valenta@thesimpler.net',
       packages=find_packages(),
+      package_data={'bootstrap_templatetags': ['static/js/*.js',
+                                               'templates/*/*/*.html']},
       url='https://github.com/tiliv/django-bootstrap-templatetags',
       license='Apache License 2.0',
       classifiers=[
