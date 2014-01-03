@@ -4,6 +4,7 @@ from django import template
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.forms.util import flatatt
 from django.conf import settings
 
 register = template.Library()
@@ -155,7 +156,7 @@ class BootstrapNavTabs(BaseBootstrapTag):
 
         return nodelist.render(context)
 
-    def tab(self, context, nodelist, label, show=True, active=False):
+    def tab(self, context, nodelist, label, show=True, active=False, **data_attrs):
         context.render_context[self]['counter'] += 1
         i = context.render_context[self]['counter']
 
@@ -182,7 +183,9 @@ class BootstrapNavTabs(BaseBootstrapTag):
             context.render_context[self]['tabs'][-1]['content'] = nodelist.render(context)
 
             # Render the tab part
-            return self.render_template('tab', label=label, active=active, tab_id=id)
+            data_attrs = flatatt({k.replace('_', '-'): v for k, v in data_attrs.items()})
+            return self.render_template('tab', label=label, active=active, tab_id=id,
+                                        data_attrs=data_attrs)
         return ""
 
     def render_content_panels(self, context):
