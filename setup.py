@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='django-bootstrap-templatetags',
-      version='1.0',
+      version='1.1',
       description='Vanilla Bootstrap structures in simple rendering blocks.',
       author='Tim Valenta',
       author_email='tim.valenta@thesimpler.net',
