@@ -66,7 +66,7 @@ class BootstrapAccordion(BaseBootstrapTag):
         For Bootstrap 3, ``style`` controls the class type that will be applied to all panels in the
         group (unless a panel declares its own ``style`` argument).  This option is unavailable for
         Bootstrap 2, since legacy accordions did not support this 'type' paradigm.
-        
+
         For Bootstrap 3, ``use_title`` is optionally a string between 'h1' and 'h6' to describe the
         desire for an HTML title heading around the clickable panel text.  This produces, for
         example, <h1 class="panel-title> <a ...></a> </h1>" instead of just a link.
@@ -184,7 +184,7 @@ class BootstrapNavTabs(BaseBootstrapTag):
             context.render_context[self]['tabs'][-1]['content'] = nodelist.render(context)
 
             # Render the tab part
-            data_attrs = flatatt({k.replace('_', '-'): v for k, v in data_attrs.items()})
+            data_attrs = flatatt(dict((k.replace('_', '-'), v) for k, v in enumerate(data_attrs)))
             return self.render_template('tab', label=label, active=active, tab_id=id,
                                         data_attrs=data_attrs)
         return ""
