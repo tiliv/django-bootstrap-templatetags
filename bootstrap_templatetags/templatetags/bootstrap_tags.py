@@ -4,7 +4,10 @@ from django import template
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from django.forms.utils import flatatt
+try:
+    from django.forms.utils import flatatt
+except ImportError:  # Django 1.8
+    from django.forms.util import flatatt
 from django.conf import settings
 
 register = template.Library()
