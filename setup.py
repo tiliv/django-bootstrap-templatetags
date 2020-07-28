@@ -3,10 +3,10 @@
 from setuptools import setup, find_packages
 
 setup(name='django-bootstrap-templatetags',
-      version='1.1',
+      version='2.0.0',
       description='Vanilla Bootstrap structures in simple rendering blocks.',
-      author='Tim Valenta',
-      author_email='tim.valenta@thesimpler.net',
+      author='Autumn Valenta',
+      author_email='steven@pivotal.energy',
       packages=find_packages(),
       package_data={'bootstrap_templatetags': ['templates/*/*/*.html']},
       url='https://github.com/tiliv/django-bootstrap-templatetags',
