@@ -1,14 +1,11 @@
-from easytag import EasyTag
-
 from django import template
+from django.forms.utils import flatatt
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-try:
-    from django.forms.utils import flatatt
-except ImportError:  # Django 1.8
-    from django.forms.util import flatatt
 from django.conf import settings
+
+from .easytag import EasyTag
 
 register = template.Library()
 

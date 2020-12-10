@@ -1,0 +1,36 @@
+dist: xenial
+
+services:
+  - postgresql
+
+language: python
+
+sudo: false
+
+git:
+  depth: 1
+  quiet: true
+
+cache: pip
+
+python:
+ - "3.6"
+ - "3.7"
+ - "3.8"
+ - "3.9-dev"
+
+before_script:
+  - psql -c 'create database postgress;' -U postgres
+
+install:
+  - 'pip install tox-travis pyyaml python-coveralls'
+
+script: tox
+
+notifications:
+    slack:
+      rooms:
+        - pivotalenergy:SvNSkVaLVlZeu82utL37wSvy#travis
+
+after_success:
+  - coveralls
