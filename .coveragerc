@@ -1,0 +1,11 @@
+[run]
+branch = True
+omit =
+    */migrations/*
+source = bootstrap_templatetags
+
+[report]
+fail_under = 65
+omit =
+    */migrations/*
+    */tests/*
