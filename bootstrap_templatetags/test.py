@@ -21,5 +21,5 @@ class BootstrapTemplateTagTest(SimpleTestCase):
         rendered_template = template_to_render.render(context)
         self.assertIn('<div class="panel-group" id="my_accordion">', rendered_template)
         self.assertIn('<div class="panel panel-primary">', rendered_template)
-        self.assertInHTML('<a href="#my_accordion-panel-1" data-toggle="collapse" '
-                          'data-parent="#my_accordion" class="accordion-toggle">', rendered_template)
+        self.assertIn('<a href="#my_accordion-panel-1" data-toggle="collapse" '
+                      'data-parent="#my_accordion" class="accordion-toggle">', rendered_template)
