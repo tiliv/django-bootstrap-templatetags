@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 from django import template
+from django.conf import settings
 from django.forms.utils import flatatt
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from django.conf import settings
 
 from .easytag import EasyTag
 
@@ -34,7 +35,7 @@ class BaseBootstrapTag(EasyTag):
         rendered string content.
         """
         name = self.templates[name]
-        content = render_to_string("{version}/{name}".format(version=version, name=name), context)
+        content = render_to_string('{version}/{name}'.format(version=version, name=name), context)
         return mark_safe(content)
 
 
@@ -44,10 +45,10 @@ class BootstrapAccordion(BaseBootstrapTag):
     end_tag = True
 
     templates = {
-        'wrapper': "accordion/wrapper.html",
-        'heading': "accordion/heading.html",
-        'body': "accordion/body.html",
-        'panel': "accordion/panel.html",
+        'wrapper': 'accordion/wrapper.html',
+        'heading': 'accordion/heading.html',
+        'body': 'accordion/body.html',
+        'panel': 'accordion/panel.html',
     }
 
     def render(self, context):
@@ -89,7 +90,7 @@ class BootstrapAccordion(BaseBootstrapTag):
     def group(self, context, nodelist, heading, style='default'):
         import warnings
         warnings.warn("The bootstrap_accordion's {% group %} tag is deprecated; use {% panel %}"
-                      " instead", DeprecationWarning)
+                      ' instead', DeprecationWarning)
         return self.panel(context, nodelist, heading, style=style)
 
     def panel(self, context, nodelist, heading, style=None):
@@ -128,10 +129,10 @@ class BootstrapNavTabs(BaseBootstrapTag):
     end_tag = True
 
     templates = {
-        'wrapper': "navtabs/wrapper.html",
-        'tab': "navtabs/tab.html",
-        'panels_wrapper': "navtabs/panels_wrapper.html",
-        'panel': "navtabs/panel.html",
+        'wrapper': 'navtabs/wrapper.html',
+        'tab': 'navtabs/tab.html',
+        'panels_wrapper': 'navtabs/panels_wrapper.html',
+        'panel': 'navtabs/panel.html',
     }
 
     def render(self, context):
@@ -142,7 +143,7 @@ class BootstrapNavTabs(BaseBootstrapTag):
         tabs = self.render_template('wrapper', content=mark_safe(content))
         panels = self.render_template('panels_wrapper',
                                       content=mark_safe(self.render_content_panels(context)))
-        return u"".join([tabs, panels])
+        return u''.join([tabs, panels])
 
     def bootstrap_navtabs(self, context, nodelist, active_tab=1):
         """ Usually empty opening node handler. """
@@ -187,7 +188,7 @@ class BootstrapNavTabs(BaseBootstrapTag):
             data_attrs = flatatt(dict((k.replace('_', '-'), v) for k, v in enumerate(data_attrs)))
             return self.render_template('tab', label=label, active=active, tab_id=id,
                                         data_attrs=data_attrs)
-        return ""
+        return ''
 
     def render_content_panels(self, context):
         """ Custom end handler to append output outside of the tabs wrapper. """
@@ -195,7 +196,7 @@ class BootstrapNavTabs(BaseBootstrapTag):
         for tab in context.render_context[self]['tabs']:
             if tab['show']:
                 content_panels.append(self.render_template('panel', **tab))
-        return u"".join(content_panels)
+        return u''.join(content_panels)
 
     def _is_active(self, i, context):
         return context.render_context[self]['counter'] == self.active_index

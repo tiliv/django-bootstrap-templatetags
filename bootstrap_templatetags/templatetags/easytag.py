@@ -1,6 +1,6 @@
-from inspect import getfullargspec
-
+# -*- coding: utf-8 -*-
 from functools import partial, wraps
+from inspect import getfullargspec
 
 from django.template import Node
 from django.template.library import parse_bits
@@ -59,7 +59,7 @@ class EasyTag(Node):
                 parse_until.extend(list(cls.intermediate_tags))
 
             if cls.end_tag is True:
-                end_tag = "end{0}".format(cls.name)
+                end_tag = 'end{0}'.format(cls.name)
             else:
                 end_tag = cls.end_tag
             parse_until.append(end_tag)
@@ -114,4 +114,4 @@ class EasyTag(Node):
             if nodelist is not None:
                 kwargs['nodelist'] = nodelist
             content.append(handler(**kwargs))
-        return str("".join(map(str, content)))
+        return str(''.join(map(str, content)))
