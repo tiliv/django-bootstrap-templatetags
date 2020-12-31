@@ -14,12 +14,14 @@ class EasyTag(Node):
     @staticmethod
     def wrap_handler(handler):
         """ Wraps the ``handler`` to resolve template variables automatically. """
+
         @wraps(handler)
         def wrapper(context, nodelist, *args, **kwargs):
             args = [arg.resolve(context) for arg in args]
             for k, v in kwargs.items():
                 kwargs[k] = v.resolve(context)
             return handler(context=context, nodelist=nodelist, *args, **kwargs)
+
         return wrapper
 
     @classmethod
@@ -67,7 +69,7 @@ class EasyTag(Node):
             end_tag = None
 
         # Get the base handler, named after the tag itself.
-        handler = cls.handler_parser(parser, token, cls.name, handler=getattr(node, cls.name))
+        _handler = cls.handler_parser(parser, token, cls.name, handler=getattr(node, cls.name))  # noqa: F841
         current_name = cls.name
 
         # Parse each nodelist and associate it with the tag piece that came just above it.
@@ -75,7 +77,7 @@ class EasyTag(Node):
         stop = len(parse_until) == 0
         while not stop:
             nodelist = parser.parse(parse_until)
-            nodelist_name = current_name
+            nodelist_name = current_name  # noqa: F841
 
             # Fetch the handler for this nodelist
             nodelist_handler = getattr(node, current_name)

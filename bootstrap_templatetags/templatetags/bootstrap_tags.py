@@ -11,7 +11,9 @@ from .easytag import EasyTag
 register = template.Library()
 
 if not hasattr(settings, 'BOOTSTRAP_TEMPLATETAGS_STYLE'):
-    raise AttributeError("settings.BOOTSTRAP_TEMPLATETAGS_STYLE is unset; please use 'bootstrap2' or 'bootstrap3'.")
+    raise AttributeError(
+        "settings.BOOTSTRAP_TEMPLATETAGS_STYLE is unset; please use 'bootstrap2' or 'bootstrap3'.")
+
 
 def stop_unsupported_use(tag, style, required_values):
     """
@@ -121,7 +123,9 @@ class BootstrapAccordion(BaseBootstrapTag):
     def _is_active(self, i, context):
         return context.render_context[self]['counter'] == self.active_index
 
+
 register.tag(BootstrapAccordion.name, BootstrapAccordion.parser)
+
 
 class BootstrapNavTabs(BaseBootstrapTag):
     name = 'bootstrap_navtabs'
