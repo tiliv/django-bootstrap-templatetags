@@ -4,3 +4,4 @@ isort
 coverage
 pre-commit
 coveralls
+black
