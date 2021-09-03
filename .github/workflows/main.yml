@@ -88,7 +88,7 @@ jobs:
           pip install bandit
 
       - name: Bandit
-        run: bandit -r bootstrap_templatetags -x bootstrap_templatetags/tests.py -s B101 -f json -o report.json
+        run: bandit -r bootstrap_templatetags -x bootstrap_templatetags/tests.py -s B308,B703 -f json -o report.json
 
       - name: Show report
         if: ${{ success() || failure() }}
@@ -169,11 +169,11 @@ jobs:
           GOOGLE_MAPS_CLIENT_ID: ${{ secrets.GOOGLE_MAPS_CLIENT_ID }}
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
-          demo_app/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
+          demo/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
 
       - name: Django source code check
         run: |
-          python demo_app/manage.py check
+          python demo/manage.py check
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
@@ -203,7 +203,7 @@ jobs:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           coverage erase
-          coverage run demo_app/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
+          coverage run demo/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
           coverage xml -o ./coverage.xml
 
       - name: Show report
