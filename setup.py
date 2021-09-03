@@ -9,7 +9,7 @@ setup(
     author="Autumn Valenta",
     author_email="steven@pivotal.energy",
     packages=find_packages(exclude=["test.*", "*test", "demo*"]),
-    package_data={"bootstrap_templatetags": ["templates/*/*/*.html"]},
+    include_package_data=True,
     url="https://github.com/pivotal-energy-solutions/django-bootstrap-templatetags",
     license="Apache License 2.0",
     classifiers=[
