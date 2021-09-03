@@ -70,9 +70,9 @@ class EasyTag(Node):
             end_tag = None
 
         # Get the base handler, named after the tag itself.
-        _handler = cls.handler_parser(
+        _handler = cls.handler_parser(  # noqa: F841
             parser, token, cls.name, handler=getattr(node, cls.name)
-        )  # noqa: F841
+        )
         current_name = cls.name
 
         # Parse each nodelist and associate it with the tag piece that came just above it.
