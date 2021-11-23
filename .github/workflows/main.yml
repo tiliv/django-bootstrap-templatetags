@@ -158,10 +158,12 @@ jobs:
           GOOGLE_MAPS_CLIENT_ID: ${{ secrets.GOOGLE_MAPS_CLIENT_ID }}
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
+          export PYTHONPATH=`pwd`
           demo/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
 
       - name: Django source code check
         run: |
+          export PYTHONPATH=`pwd`
           python demo/manage.py check
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
