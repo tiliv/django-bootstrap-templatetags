@@ -193,6 +193,7 @@ jobs:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: |
           coverage erase
+          export PYTHONPATH=`pwd`
           coverage run demo/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
           coverage xml -o ./coverage.xml
 
