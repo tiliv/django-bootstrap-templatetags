@@ -165,11 +165,10 @@ jobs:
         env:
           PYTHONWARNINGS: once::DeprecationWarning
           TASK_ALWAYS_EAGER: 1
-          GOOGLE_MAPS_CLIENT_ID: ${{ secrets.GOOGLE_MAPS_CLIENT_ID }}
-          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          DB_TYPE: ${{ matrix.db }}
         run: |
           export PYTHONPATH=`pwd`
-          coverage run  demo/manage.py test --noinput --settings=demo.settings bootstrap_templatetags
+          coverage run  demo/manage.py test --noinput --settings=demo.settings_test bootstrap_templatetags
 
       - name: "Upload Coverage Results for PY:${{ matrix.python-version }} DB:${{ matrix.db}} DJ:${{ matrix.django-version }}"
         uses: actions/upload-artifact@v2
