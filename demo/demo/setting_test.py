@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import warnings
 
 from .settings import *
@@ -23,9 +24,11 @@ for handler in LOGGING.get("handlers", []):
 for logger in LOGGING.get("loggers", []):
     LOGGING["loggers"][logger]["level"] = "CRITICAL"
 
-DEFAULT_DB = DATABASES["default"]
-if os.environ.get("DB_TYPE") == "sqlite":
-    DEFAULT_DB = {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+mysql_db = DATABASES["default"]
+DEFAULT_DB = {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+if os.environ.get("DB_TYPE") == "mysql":
+    print("Using MySQL Backend!")
+    DEFAULT_DB = mysql_db
 
 DATABASES = {
     "default": DEFAULT_DB,

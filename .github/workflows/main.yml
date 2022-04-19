@@ -1,4 +1,3 @@
-
 name: Bootstrap Template Tags Tests
 
 on: push
@@ -168,7 +167,7 @@ jobs:
           DB_TYPE: ${{ matrix.db }}
         run: |
           export PYTHONPATH=`pwd`
-          coverage run  demo/manage.py test --noinput --settings=demo.settings_test bootstrap_templatetags
+          coverage run demo/manage.py test --noinput --settings=demo.settings_test bootstrap_templatetags
 
       - name: "Upload Coverage Results for PY:${{ matrix.python-version }} DB:${{ matrix.db}} DJ:${{ matrix.django-version }}"
         uses: actions/upload-artifact@v2
@@ -184,7 +183,7 @@ jobs:
 
   coverage:
     name: Upload Coverage to Codecov
-    needs: [tests]
+    needs: [ tests ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -204,8 +203,8 @@ jobs:
 
       - name: Combine Report Coverage
         run: |
-            coverage combine coverage-*/.coverage
-            coverage xml
+          coverage combine coverage-*/.coverage
+          coverage xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -217,11 +216,11 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: ['cancel', 'outdated', 'black', 'pre-commit', 'security', 'tests', 'coverage']
+    needs: [ 'cancel', 'outdated', 'black', 'pre-commit', 'security', 'tests', 'coverage' ]
     outputs:
       bumped: ${{ steps.release.outputs.bumped }}
       bump_version: ${{ steps.release.outputs.bump_version }}
-      bump_sha:  ${{ steps.release.outputs.bump_sha }}
+      bump_sha: ${{ steps.release.outputs.bump_sha }}
     steps:
       - uses: actions/checkout@v2
         with:
