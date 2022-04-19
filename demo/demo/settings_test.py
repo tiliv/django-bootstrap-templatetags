@@ -1,20 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os
 import warnings
 
-from .settings import *
-
-
-class DisableMigrations(object):
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return None
-
-
-MIGRATION_MODULES = DisableMigrations()
+from .settings import *  # noqa: F403,F401
 
 # Handle system warning as log messages
 warnings.simplefilter("once")
@@ -25,7 +13,11 @@ for logger in LOGGING.get("loggers", []):
     LOGGING["loggers"][logger]["level"] = "CRITICAL"
 
 mysql_db = DATABASES["default"]
-DEFAULT_DB = {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}
+DEFAULT_DB = {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": ":memory:",
+    "TEST": {"MIGRATE": False},
+}
 if os.environ.get("DB_TYPE") == "mysql":
     print("Using MySQL Backend!")
     DEFAULT_DB = mysql_db
