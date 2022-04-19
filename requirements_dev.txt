@@ -1,3 +1,5 @@
+django-environ
+mysqlclient
 flake8
 tox
 coverage
