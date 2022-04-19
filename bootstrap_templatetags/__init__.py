@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __name__ = "bootstrap_templatetags"
 __author__ = "Pivotal Energy Solutions"
-__version_info__ = (2, 1, 11)
-__version__ = "2.1.11"
+__version_info__ = (2, 1, 12)
+__version__ = "2.1.12"
 __date__ = "2013/07/8 9:47:00 AM"
 
 __credits__ = ["Tim Valenta", "Steven Klass"]
