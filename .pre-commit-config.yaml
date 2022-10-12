@@ -1,0 +1,35 @@
+default_language_version:
+  python: python3.10
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-added-large-files
+        args: [ '--maxkb=500' ]
+      - id: check-byte-order-marker
+        exclude: .*\.csv|.*\.xsd|.*\.xlsx|.*\.xml
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-private-key
+      - id: fix-encoding-pragma
+      - id: end-of-file-fixer
+        exclude: .idea/.*|.*\.blg|.*\.json|.*\.dat
+      - id: trailing-whitespace
+        exclude: .idea/.*|.*\.blg|.*\.json|.*\.dat
+      - id: mixed-line-ending
+        exclude: .idea/.*
+      - id: check-json
+  -   repo: https://github.com/ambv/black
+      rev: 22.1.0
+      hooks:
+      - id: black
+        language_version: python3.10
+        additional_dependencies: ['click==8.0.4']
+  -   repo: https://gitlab.com/pycqa/flake8
+      rev: 4.0.1
+      hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-black>=0.1.1
+        language_version: python3.10
